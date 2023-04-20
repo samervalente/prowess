@@ -21,7 +21,7 @@ export default function Select({ id, options, selectTitle, register, selectIcon,
                 </div>
                 <select {...register(id)}  {...rest} className="w-full [&>option]:text-gray-700  [&>option]:rounded-none  text-gray-300 text-[12px] bg-inherit outline-none">
                     <option value="none" selected disabled hidden>{initialValue}</option>
-                    {options?.map(value => <option key={value} value={value}>{value}</option>)}
+                    {options?.map(value => <option className='rounded-none' key={value} value={value}>{value}</option>)}
                 </select>
 
             </div>

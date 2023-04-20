@@ -12,7 +12,7 @@ interface AccordionProps extends React.PropsWithChildren {
 export default function SimpleAccordion({title, children}: AccordionProps) {
   return (
     <div>
-      <Accordion sx={{backgroundColor:'#2A2A2A', color:"#BBBBBB", textAlign:"justify"}}>
+      <Accordion sx={{backgroundColor:'#2A2A2A', color:"#BBBBBB"}}>
         <AccordionSummary
           expandIcon={<ExpandMoreIcon  sx={{color:"#00D1FF"}} />}
           aria-controls="panel1a-content"
@@ -22,7 +22,7 @@ export default function SimpleAccordion({title, children}: AccordionProps) {
           <Typography sx={{color:"white"}}>{title}</Typography>
         </AccordionSummary>
         <AccordionDetails>
-          <Typography>
+          <Typography sx={{fontSize:14, textAlign: 'justify'}}>
             {children}
           </Typography>
         </AccordionDetails>
