@@ -1,11 +1,12 @@
 import SimpleAccordion from "@/components/Accordion";
+import Header from "@/components/Header";
 import Link from "next/link";
 
 export default function FAQS(){
     return (
         <>
-            
-       <div className='p-3 min-h-[100vh] flex flex-col items-center  gap-y-1'>
+        <Header />
+       <div className='p-3  flex flex-col items-center  gap-y-1'>
        <label className='font-bold text-blue-main mt-10'>FAQS</label>
        <SimpleAccordion title="O que é a Prowess?">
           A <span className="text-blue-main font-bold">Prowess</span> é uma plataforma online que tem como objetivo conectar estudantes que desejam dividir os custos de moradia e vida em uma determinada cidade ou estado. A ideia é que os estudantes possam encontrar companheiros de quarto ou colegas de apartamento que estejam estudando na mesma região, o que pode resultar em economias significativas para todos os envolvidos.
