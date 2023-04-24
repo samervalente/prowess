@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export default function Header() {
   return (
-    <header className="flex justify-between items-center p-4">
+    <header className="flex justify-between items-center p-4 sticky">
       <Link href="/" className='flex items-center text-[24px] text-blue-main font-bold'>
 
         <img src="/logo.png" width={60} height={50} alt="logo" />
