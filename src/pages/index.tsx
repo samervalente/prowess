@@ -1,5 +1,3 @@
-import { Inter } from 'next/font/google'
-
 import Select from '@/components/Select'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import Button from '@/components/Button'
@@ -8,6 +6,8 @@ import { useEffect, useState } from 'react'
 import Header from '@/components/Header'
 import { TPost } from '@/components/Post'
 import Post from '@/components/Post'
+import { Pagination, PaginationItem, Stack } from '@mui/material'
+
 
 type filterFields = {
   state?: string;
@@ -19,13 +19,13 @@ type District = {
   nome: string;
 }
 
-
-
 export default function Home({ data }: { data: TPost[] }) {
   const { register, watch, reset, handleSubmit, formState: { errors } } = useForm<filterFields>();
   const [districts, setDistricts] = useState([])
   const [posts, setPosts] = useState<TPost[]>(data)
   const [skip, setSkip] = useState(0)
+ 
+
   const onSubmit: SubmitHandler<filterFields> = async (data: filterFields) => {
 
     const clause = data.city !== "none" ? `&city=${data.city}` : ""
@@ -57,9 +57,9 @@ export default function Home({ data }: { data: TPost[] }) {
   return (
     <main className="flex min-h-screen flex-col ">
       <Header />
-      <div className='flex relative'>
-        <section className="flex flex-col justify-center items-center h-[60vh] fixed left-10">
-          <h1 className="text-[24px] ">Seja bem vindo a <span className="text-blue-main font-bold ">Prowess</span></h1>
+      <div className='flex flex-col items-center'>
+        <section className="flex flex-col justify-center items-center h-[60vh]  text-center ">
+          <h1 className="text-[24px]">Seja bem vindo a <span className="text-blue-main font-bold ">Prowess</span></h1>
           <form className='flex flex-col items-center p-1' onSubmit={handleSubmit(onSubmit)}>
             <h3 className='text-gray-400'>Conecte-se com estudantes de todo o país</h3>
             <div className="flex justify-between gap-x-3 mt-2">
@@ -68,18 +68,17 @@ export default function Home({ data }: { data: TPost[] }) {
               <Select id="gender" initialValue="Gênero" options={["Masculino", "Feminino", "Indiferente"]} register={register} errors={errors} />
             </div>
 
-            <Button width='w-[70%]' type="submit" >Buscar</Button>
-            <span className='mt-3 text-[14px] underline text-blue-main cursor-pointer' onClick={() => reset()}>Limpar formulário</span>
-            <div className='flex gap-x-3'>
-              {skip > 0 && <button onClick={handleBack}>Back</button>}
-              <button onClick={handleSkip}>Skip</button>
-            </div>
+            <Button width='w-[70%]' type="submit">Buscar</Button>
+            <span className='mt-3 text-[14px] underline text-blue-main cursor-pointer' onClick={() => reset()}>Limpar formulário</span> 
           </form>
         </section>
-        <section className='flex flex-col gap-y-5 absolute right-10'>
+        <section className='flex flex-col gap-y-5'>
           <h4 className='text-center'>Últimas publicações</h4>
-          {posts ? posts.map((post: TPost) => <Post postData={post} />) : 'Carregando...'}
+          {posts ? posts.map((post: TPost, i) => <Post key={i} postData={post} />) : 'Carregando...'}
         </section>
+        <Stack spacing={2}>
+          <Pagination count={10} variant='outlined' color="primary"  renderItem={(item) => <PaginationItem sx={{color:"white", backgroundColor:'red'}} {...item} />} />
+         </Stack>
       </div>
     </main>
   )
