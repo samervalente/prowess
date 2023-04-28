@@ -1,6 +1,7 @@
 import SimpleAccordion from "@/components/Accordion";
 import Header from "@/components/Header";
 import Link from "next/link";
+import { ArrowLeft } from "@phosphor-icons/react";
 
 export default function FAQS(){
     return (
@@ -22,7 +23,7 @@ export default function FAQS(){
         <SimpleAccordion title="Quais recursos são oferecidos?">
         Além de facilitar a busca por colegas de quarto, a Prowess também oferece recursos úteis para os usuários, como informações sobre os preços médios de aluguel na região e dicas sobre como economizar dinheiro enquanto estudam. Com a Prowess, os estudantes podem encontrar um lugar para morar de forma mais fácil, econômica e socialmente conectada.
         </SimpleAccordion>
-
+        <Link href="/" className="flex items-center gap-x-3 text-md mt-5"> <ArrowLeft  />Voltar</Link>
        </div>
         </>
     )
