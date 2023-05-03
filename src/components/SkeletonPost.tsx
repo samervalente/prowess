@@ -6,12 +6,12 @@ const SkeletonPost = () => {
           <div className='mr-3 w-[140px] h-[120px] bg-gray-300 rounded-md' />
           <ul className="w-full flex flex-col gap-y-2">
             <text className='text-[16px] font-medium'></text>
-            {Array(4).fill(0).map((i: number) => <li key={i} className='h-4 w-9/12 rounded-md bg-gray-300'> </li>)}
+            {Array(1,2,3).fill(4,1,1).map((i: number) => <li key={i} className='h-4 w-9/12 rounded-md bg-gray-300'> </li>)}
           </ul>
         </div>
 
         <ul className="mt-10 flex flex-col gap-y-5">
-          {Array(3).fill(0).map((i: number) => <li key={i} className="h-4 w-10/12 bg-gray-300 rounded-md"></li>)}
+          {Array(1,2,3).fill(4,1,1).map((i: number) => <li key={i+1} className="h-4 w-10/12 bg-gray-300 rounded-md"></li>)}
         </ul>
       </section>
       <div className='w-[50%] flex flex-col gap-y-3'>

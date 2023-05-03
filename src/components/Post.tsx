@@ -1,4 +1,5 @@
 import { Baby, GenderNeuter, MapPin, WhatsappLogo } from '@phosphor-icons/react'
+import Image from 'next/image';
 export type TPost = {
   id: string;
   partners: string;
@@ -30,7 +31,7 @@ export default function postData({ postData }: { postData: TPost }) {
     <div className='flex p-3 bg-white w-[60vw] mt-3 h-[300px] rounded-lg text-gray-700 animate-fade-in  text-[15px]'>
       <section className='w-[60%] flex flex-col '>
         <div className='flex'>
-          <img className='mr-3 w-[120px] h-[120px] rounded-md' src={postData.author.imageUrl} />
+          <Image className='mr-3 rounded-md' width={120} height={120} src={`/${postData.author.imageUrl}`} alt="user-profile" />
           <ul>
             <text className=' text-[16px] font-medium'>{postData.author.name}</text>
             <li className='flex items-center'><Baby size={16} weight='fill' color='#FDD136' />  Idade: {calculateAge(postData.author.birthDate)} </li>

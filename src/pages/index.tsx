@@ -7,6 +7,8 @@ import { TPost } from '@/components/Post'
 import Post from '@/components/Post'
 import { Pagination, PaginationItem, Stack } from '@mui/material'
 import SkeletonPost from '@/components/SkeletonPost'
+import { useYupValidationResolver } from '@/hooks/yupValidationResolver'
+import { filterPostSchema } from '@/schemas/filterPosts'
 
 
 type filterFields = {
@@ -20,7 +22,8 @@ type District = {
 }
 
 export default function Home() {
-  const { register, watch, reset, getValues, handleSubmit, formState: { errors } } = useForm<filterFields>();
+  const resolver = useYupValidationResolver(filterPostSchema)
+  const { register, watch, reset, getValues, handleSubmit, formState: { errors } } = useForm<filterFields>({ resolver });
   const [districts, setDistricts] = useState([])
   const [posts, setPosts] = useState<TPost[]>()
   const [skip, setSkip] = useState(0)
@@ -30,8 +33,9 @@ export default function Home() {
 
   const onSubmit: SubmitHandler<filterFields> = async (data: filterFields) => {
     setIsFetchingPosts(true)
-    const clause = data.city !== "none" ? `&city=${data.city}` : ""
-    const req = `http://localhost:4000/posts?state=${data.state}${clause}&skip=${skip}`
+    const clause = data.city !== "none" ? `&city=${data.city}` : ''
+    const genderClause = data.gender !== "none" ? `&gender=${data.gender}` : ''
+    const req = `http://localhost:4000/posts?state=${data.state}${clause}${genderClause}&skip=${skip}`
     const res = await fetch(req)
 
 
@@ -47,7 +51,7 @@ export default function Home() {
     setPosts(posts)
   }
 
-
+  console.log(errors)
   useEffect(() => {
     async function fetchData() {
       if (ref.current !== skip) {
@@ -85,7 +89,6 @@ export default function Home() {
 
   }, [watch("state")])
 
-  let skeletonPosts = Array(3).fill(0);
 
   const handleChange = (event: React.ChangeEvent<unknown>, value: number) => {
     setSkip(value - 1);
@@ -111,12 +114,12 @@ export default function Home() {
         <section className='flex flex-col items-center gap-y-5'>
 
 
-          {isFetchintPosts ? skeletonPosts.map((i: number) => <SkeletonPost key={i} />) : <>
+          {isFetchintPosts ? Array(1,2,3).fill(4,1,1).map((i: number) => <SkeletonPost key={i} />) : <>
             {posts && posts.length > 1 ?
               <>
                 {posts.map((post: TPost, i) => <Post key={post.id} postData={post} />)}
                 <Stack spacing={2}>
-                  <Pagination count={count/3} page={skip + 1} variant='outlined' onChange={handleChange} color="primary" renderItem={(item) => <PaginationItem sx={{ color: "white" }} {...item} />} />
+                  <Pagination count={count / 3} page={skip + 1} variant='outlined' onChange={handleChange} color="primary" renderItem={(item) => <PaginationItem sx={{ color: "white" }} {...item} />} />
                 </Stack>
               </> : <span className='mt-10'>Nenhuma publicação encontrada para estes filtros</span>}
 
