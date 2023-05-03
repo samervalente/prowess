@@ -9,7 +9,7 @@ import { Pagination, PaginationItem, Stack } from '@mui/material'
 import SkeletonPost from '@/components/SkeletonPost'
 import { useYupValidationResolver } from '@/hooks/yupValidationResolver'
 import { filterPostSchema } from '@/schemas/filterPosts'
-
+import {toast} from 'react-toastify'
 
 type filterFields = {
   state?: string;
@@ -32,26 +32,30 @@ export default function Home() {
   const ref = useRef(skip)
 
   const onSubmit: SubmitHandler<filterFields> = async (data: filterFields) => {
-    setIsFetchingPosts(true)
-    const clause = data.city !== "none" ? `&city=${data.city}` : ''
-    const genderClause = data.gender !== "none" ? `&gender=${data.gender}` : ''
-    const req = `http://localhost:4000/posts?state=${data.state}${clause}${genderClause}&skip=${skip}`
-    const res = await fetch(req)
-
-
-    const { posts, count } = await res.json()
-    if (posts) {
-      setTimeout(() => {
-        setIsFetchingPosts(false)
-
-      }, 3000)
+    if(data.state !== "none"){
+      setIsFetchingPosts(true)
+      const clause = data.city !== "none" ? `&city=${data.city}` : ''
+      const genderClause = data.gender !== "none" && data.gender !== "Indiferente" ? `&gender=${data.gender}` : ''
+      const req = `http://localhost:4000/posts?state=${data.state}${clause}${genderClause}&skip=${skip}`
+      const res = await fetch(req)
+  
+  
+      const { posts, count } = await res.json()
+      if (posts) {
+        setTimeout(() => {
+          setIsFetchingPosts(false)
+  
+        }, 3000)
+      }
+      setCount(count)
+      setSkip(0)
+      setPosts(posts)
+    }else{
+      toast.error("Selecione ao menos o estado")
     }
-    setCount(count)
-    setSkip(0)
-    setPosts(posts)
   }
 
-  console.log(errors)
+  
   useEffect(() => {
     async function fetchData() {
       if (ref.current !== skip) {
@@ -104,7 +108,7 @@ export default function Home() {
             <h3 className='text-gray-400'>Conecte-se com estudantes de todo o país</h3>
             <div className="flex justify-between items-center gap-x-3 mt-2">
               <Select id="state" initialValue="Estado" options={states.map(state => state.nome)} register={register} errors={errors} />
-              <Select id="city" initialValue="Cidade" options={districts.map((district: District) => district.nome)} register={register} errors={errors} />
+              <Select id="city" initialValue="Cidade" disabled={getValues("state") === "none"} options={districts.map((district: District) => district.nome)} register={register} errors={errors} />
               <Select id="gender" initialValue="Gênero" options={["Masculino", "Feminino", "Indiferente"]} register={register} errors={errors} />
               <button className='bg-blue-700 p-1 w-[100px] rounded-md' type="submit">Buscar</button>
             </div>
@@ -121,7 +125,7 @@ export default function Home() {
                 <Stack spacing={2}>
                   <Pagination count={count / 3} page={skip + 1} variant='outlined' onChange={handleChange} color="primary" renderItem={(item) => <PaginationItem sx={{ color: "white" }} {...item} />} />
                 </Stack>
-              </> : <span className='mt-10'>Nenhuma publicação encontrada para estes filtros</span>}
+              </> : posts? <span className='mt-10'>Nenhuma publicação encontrada para estes filtros</span>: ''}
 
           </>}
         </section>

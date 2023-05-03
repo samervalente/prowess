@@ -10,6 +10,7 @@ interface SelectProps extends PropsWithChildren {
     className?  : string,
     register: UseFormRegister<any>
     errors: FieldErrors | undefined;
+    [x:string]: any
 }
 
 export default function Select({ id, options, selectTitle, className, register, selectIcon, initialValue, ...rest }: SelectProps) {
