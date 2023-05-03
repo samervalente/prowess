@@ -1,6 +1,6 @@
 const SkeletonPost = () => {
   return (
-    <div className='flex p-3 bg-white w-[60vw] mt-3 h-[300px] rounded-lg text-gray-700  text-[15px]'>
+    <div className='flex p-3 bg-white w-[60vw] mt-3 h-[300px] rounded-lg text-gray-700 animate-fade-in text-[15px]'>
       <section className='w-[60%]  animate-pulse flex flex-col '>
         <div className='flex '>
           <div className='mr-3 w-[140px] h-[120px] bg-gray-300 rounded-md' />

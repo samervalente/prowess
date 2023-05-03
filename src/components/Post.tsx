@@ -27,7 +27,7 @@ export default function postData({ postData }: { postData: TPost }) {
   }
 
   return (
-    <div className='flex p-3 bg-white w-[60vw] mt-3 h-[300px] rounded-lg text-gray-700  text-[15px]'>
+    <div className='flex p-3 bg-white w-[60vw] mt-3 h-[300px] rounded-lg text-gray-700 animate-fade-in  text-[15px]'>
       <section className='w-[60%] flex flex-col '>
         <div className='flex'>
           <img className='mr-3 w-[120px] h-[120px] rounded-md' src={postData.author.imageUrl} />

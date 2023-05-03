@@ -1,7 +1,7 @@
 import Select from '@/components/Select'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { states } from '@/constants/states'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import Header from '@/components/Header'
 import { TPost } from '@/components/Post'
 import Post from '@/components/Post'
@@ -20,11 +20,13 @@ type District = {
 }
 
 export default function Home() {
-  const { register, watch, reset, handleSubmit, formState: { errors } } = useForm<filterFields>();
+  const { register, watch, reset, getValues, handleSubmit, formState: { errors } } = useForm<filterFields>();
   const [districts, setDistricts] = useState([])
   const [posts, setPosts] = useState<TPost[]>()
   const [skip, setSkip] = useState(0)
+  const [count, setCount] = useState(0)
   const [isFetchintPosts, setIsFetchingPosts] = useState(false)
+  const ref = useRef(skip)
 
   const onSubmit: SubmitHandler<filterFields> = async (data: filterFields) => {
     setIsFetchingPosts(true)
@@ -32,20 +34,42 @@ export default function Home() {
     const req = `http://localhost:4000/posts?state=${data.state}${clause}&skip=${skip}`
     const res = await fetch(req)
 
-    
-    const { posts } = await res.json()
-    if(posts){
+
+    const { posts, count } = await res.json()
+    if (posts) {
       setTimeout(() => {
-       setIsFetchingPosts(false)
-       console.log(posts)
+        setIsFetchingPosts(false)
+
       }, 3000)
     }
-   
+    setCount(count)
+    setSkip(0)
     setPosts(posts)
   }
 
-  const handleSkip = () => setSkip(skip + 1)
-  const handleBack = () => skip > 0 && setSkip(skip - 1)
+
+  useEffect(() => {
+    async function fetchData() {
+      if (ref.current !== skip) {
+        const data = getValues();
+        setIsFetchingPosts(true)
+        const clause = data.city !== "none" ? `&city=${data.city}` : ""
+        const req = `http://localhost:4000/posts?state=${data.state}${clause}&skip=${skip}`
+        const res = await fetch(req)
+
+
+        const { posts } = await res.json()
+        if (posts) {
+          setTimeout(() => {
+            setIsFetchingPosts(false)
+          }, 1000)
+        }
+
+        setPosts(posts)
+      }
+    }
+    fetchData()
+  }, [getValues, skip])
 
   useEffect(() => {
     async function fetchData() {
@@ -63,10 +87,14 @@ export default function Home() {
 
   let skeletonPosts = Array(3).fill(0);
 
+  const handleChange = (event: React.ChangeEvent<unknown>, value: number) => {
+    setSkip(value - 1);
+  };
+
   return (
     <>
       <Header />
-    <main className="flex flex-col min-h-screen ">
+      <main className="flex flex-col min-h-screen ">
         <section className="flex flex-col justify-center items-center  text-center ">
           <h1 className="text-[24px]">Seja bem vindo a <span className="text-blue-main font-bold ">Prowess</span></h1>
           <form className='flex flex-col items-center p-1' onSubmit={handleSubmit(onSubmit)}>
@@ -81,20 +109,20 @@ export default function Home() {
           <span className='mt-3 text-[14px] underline text-blue-main cursor-pointer' onClick={() => reset()}>Limpar formulário</span>
         </section>
         <section className='flex flex-col items-center gap-y-5'>
-     
 
-        {isFetchintPosts ? skeletonPosts.map((i: number) => <SkeletonPost key={i} />): <>
-        {posts && posts.length > 1 ? 
-          <>
-            {posts.map((post: TPost, i) => <Post key={post.id} postData={post} />)}
-            <Stack spacing={2}>
-              <Pagination count={10} variant='outlined' color="primary" renderItem={(item) => <PaginationItem sx={{ color: "white" }} {...item} />} />
-            </Stack>
-          </>: <span className='mt-10'>No posts found for these filters </span>}
 
-        </>}
+          {isFetchintPosts ? skeletonPosts.map((i: number) => <SkeletonPost key={i} />) : <>
+            {posts && posts.length > 1 ?
+              <>
+                {posts.map((post: TPost, i) => <Post key={post.id} postData={post} />)}
+                <Stack spacing={2}>
+                  <Pagination count={count/3} page={skip + 1} variant='outlined' onChange={handleChange} color="primary" renderItem={(item) => <PaginationItem sx={{ color: "white" }} {...item} />} />
+                </Stack>
+              </> : <span className='mt-10'>Nenhuma publicação encontrada para estes filtros</span>}
+
+          </>}
         </section>
-    </main>
+      </main>
     </>
   )
 }
