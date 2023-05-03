@@ -31,9 +31,9 @@ export default function postData({ postData }: { postData: TPost }) {
     <div className='flex p-3 bg-white w-[60vw] mt-3 h-[300px] rounded-lg text-gray-700 animate-fade-in  text-[15px]'>
       <section className='w-[60%] flex flex-col '>
         <div className='flex'>
-          <Image className='mr-3 rounded-md' width={120} height={120} src={`/${postData.author.imageUrl}`} alt="user-profile" />
+          <Image className='mr-3 rounded-md' width={120} height={120} src={`https://cdn-icons-png.flaticon.com/512/3135/3135715.png`} alt="user-profile" />
           <ul>
-            <text className=' text-[16px] font-medium'>{postData.author.name}</text>
+            <span className=' text-[16px] font-medium'>{postData.author.name}</span>
             <li className='flex items-center'><Baby size={16} weight='fill' color='#FDD136' />  Idade: {calculateAge(postData.author.birthDate)} </li>
             <li className='flex items-center'><GenderNeuter size={16} weight='fill' color='gray' /> Gênero: {postData.author.gender}</li>
             <li className='flex items-center'> <MapPin size={16} weight='fill' color='red' />  Destino: {postData.city} - {postData.state}</li>

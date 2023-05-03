@@ -5,7 +5,7 @@ const SkeletonPost = () => {
         <div className='flex '>
           <div className='mr-3 w-[140px] h-[120px] bg-gray-300 rounded-md' />
           <ul className="w-full flex flex-col gap-y-2">
-            <text className='text-[16px] font-medium'></text>
+            <span className='text-[16px] font-medium'></span>
             {Array(1,2,3).fill(4,1,1).map((i: number) => <li key={i} className='h-4 w-9/12 rounded-md bg-gray-300'> </li>)}
           </ul>
         </div>
