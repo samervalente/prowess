@@ -9,7 +9,9 @@ import { Pagination, PaginationItem, Stack } from '@mui/material'
 import SkeletonPost from '@/components/SkeletonPost'
 import { useYupValidationResolver } from '@/hooks/yupValidationResolver'
 import { filterPostSchema } from '@/schemas/filterPosts'
-import {toast} from 'react-toastify'
+import { toast } from 'react-toastify'
+import Image from 'next/image'
+
 
 type filterFields = {
   state?: string;
@@ -26,44 +28,54 @@ export default function Home() {
   const { register, watch, reset, getValues, handleSubmit, formState: { errors } } = useForm<filterFields>({ resolver });
   const [districts, setDistricts] = useState([])
   const [posts, setPosts] = useState<TPost[]>()
+  const [page, setPage] = useState(1)
   const [skip, setSkip] = useState(0)
   const [count, setCount] = useState(0)
   const [isFetchintPosts, setIsFetchingPosts] = useState(false)
-  const ref = useRef(skip)
 
   const onSubmit: SubmitHandler<filterFields> = async (data: filterFields) => {
-    if(data.state !== "none"){
-      setIsFetchingPosts(true)
-      const clause = data.city !== "none" ? `&city=${data.city}` : ''
-      const genderClause = data.gender !== "none" && data.gender !== "Indiferente" ? `&gender=${data.gender}` : ''
-      const req = `http://localhost:4000/posts?state=${data.state}${clause}${genderClause}&skip=${skip}`
-      const res = await fetch(req)
-  
-  
-      const { posts, count } = await res.json()
-      if (posts) {
-        setTimeout(() => {
-          setIsFetchingPosts(false)
-  
-        }, 3000)
+    if (data.state !== "none") {
+      try {
+        setIsFetchingPosts(true)
+        const clause = data.city !== "none" ? `&city=${data.city}` : ''
+        const genderClause = data.gender !== "none" && data.gender !== "Indiferente" ? `&gender=${data.gender}` : ''
+
+        const requestUrl = `http://localhost:4000/posts?state=${data.state}${clause}${genderClause}&skip=${skip * 3}`
+
+        const res = await fetch(requestUrl)
+
+
+        const { posts, count } = await res.json()
+        if (posts) {
+          setTimeout(() => {
+            setIsFetchingPosts(false)
+
+          }, 3000)
+        }
+
+     
+        setCount(count)
+        setPosts(posts)
+      } catch (error) {
+        toast.error("Erro ao carregar as publicações")
       }
-      setCount(count)
-      setSkip(0)
-      setPosts(posts)
-    }else{
+    } else {
       toast.error("Selecione ao menos o estado")
     }
   }
 
-  
+
   useEffect(() => {
     async function fetchData() {
-      if (ref.current !== skip) {
+      if (posts) {
         const data = getValues();
         setIsFetchingPosts(true)
-        const clause = data.city !== "none" ? `&city=${data.city}` : ""
-        const req = `http://localhost:4000/posts?state=${data.state}${clause}&skip=${skip}`
-        const res = await fetch(req)
+        const clause = data.city !== "none" ? `&city=${data.city}` : ''
+        const genderClause = data.gender !== "none" && data.gender !== "Indiferente" ? `&gender=${data.gender}` : ''
+
+        const requestUrl = `http://localhost:4000/posts?state=${data.state}${clause}${genderClause}&skip=${skip * 3}`
+
+        const res = await fetch(requestUrl)
 
 
         const { posts } = await res.json()
@@ -71,13 +83,13 @@ export default function Home() {
           setTimeout(() => {
             setIsFetchingPosts(false)
           }, 1000)
-        }
-
+        } 
+     
         setPosts(posts)
       }
     }
     fetchData()
-  }, [getValues, skip])
+  }, [getValues, skip, page])
 
   useEffect(() => {
     async function fetchData() {
@@ -93,10 +105,13 @@ export default function Home() {
 
   }, [watch("state")])
 
-
   const handleChange = (event: React.ChangeEvent<unknown>, value: number) => {
-    setSkip(value - 1);
+
+    setSkip(value - 1)
+    setPage(value);
   };
+
+
 
   return (
     <>
@@ -118,16 +133,21 @@ export default function Home() {
         <section className='flex flex-col items-center gap-y-5'>
 
 
-          {isFetchintPosts ? Array(1,2,3).fill(4,1,1).map((i: number) => <SkeletonPost key={i} />) : <>
-            {posts && posts.length > 1 ?
+          {isFetchintPosts ? Array(1, 2, 3).fill(4, 1, 1).map((i: number) => <SkeletonPost key={i} />) : <>
+            {posts && posts.length > 0 ?
               <>
                 {posts.map((post: TPost, i) => <Post key={post.id} postData={post} />)}
-                <Stack spacing={2}>
-                  <Pagination count={count / 3} page={skip + 1} variant='outlined' onChange={handleChange} color="primary" renderItem={(item) => <PaginationItem sx={{ color: "white" }} {...item} />} />
-                </Stack>
-              </> : posts? <span className='mt-10'>Nenhuma publicação encontrada para estes filtros</span>: ''}
+              </> : posts && posts?.length === 0 ? <> 
+              
+              <span className='mt-10 text-xl'>Ahh não! Nenhuma publicação encontrada {`:(`}</span>
+              <Image src={'/amico2.png'} width={300} height={300} alt="not-found" />
+              </> : ''}
 
           </>}
+
+          {posts && posts.length > 0 ? <Stack spacing={2}>
+            <Pagination count={Math.ceil(count / 3)} page={page} variant='outlined' onChange={handleChange} color="primary" renderItem={(item) => <PaginationItem sx={{ color: "white" }} {...item} />} />
+          </Stack> : ''}
         </section>
       </main>
     </>
