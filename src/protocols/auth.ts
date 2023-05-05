@@ -1,4 +1,4 @@
-export type SignUpInputFields = {
+export interface SignUpInputFields  {
     firstname: string,
     surname: string,
     gender: string,
@@ -11,3 +11,9 @@ export type SignUpInputFields = {
     [key: string]: string;
 }
 
+export interface LoggedUser {
+    name:string,
+    imageUrl:string;
+    token:string;
+    countPosts: number;
+}
