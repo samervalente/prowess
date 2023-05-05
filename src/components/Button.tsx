@@ -7,7 +7,7 @@ interface ButtonProps extends PropsWithChildren{
 
 export default function Button({children, width, ...otherProps}: ButtonProps){
     return (
-        <button {...otherProps} className={`h-[38px] hover:bg-blue-main transition-all w-full ${width} duration-[0.4s]  mt-4 rounded-md border-none bg-blue-700`}>
+        <button {...otherProps} className={`h-[38px] my-3 hover:bg-blue-main transition-all w-max px-4 ${width} duration-[0.4s] rounded-md border-none bg-blue-700`}>
             {children}
         </button>
     )
