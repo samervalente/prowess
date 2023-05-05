@@ -18,7 +18,7 @@ export type TPost = {
   }
 }
 
-export default function postData({ postData }: { postData: TPost }) {
+export function Post({ postData }: { postData: TPost }) {
   function calculateAge(birthDate: string) {
     const dateMS = new Date(birthDate).getTime()
     const nowMS = Date.now()

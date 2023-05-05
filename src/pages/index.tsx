@@ -1,10 +1,9 @@
 import Select from '@/components/Select'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { states } from '@/constants/states'
-import { useEffect, useState, useRef } from 'react'
+import { useEffect, useState } from 'react'
 import Header from '@/components/Header'
-import { TPost } from '@/components/Post'
-import Post from '@/components/Post'
+import { TPost, Post } from '@/components/Post'
 import { Pagination, PaginationItem, Stack } from '@mui/material'
 import SkeletonPost from '@/components/SkeletonPost'
 import { useYupValidationResolver } from '@/hooks/yupValidationResolver'
@@ -106,7 +105,6 @@ export default function Home() {
   }, [watch("state")])
 
   const handleChange = (event: React.ChangeEvent<unknown>, value: number) => {
-
     setSkip(value - 1)
     setPage(value);
   };
@@ -140,7 +138,7 @@ export default function Home() {
               </> : posts && posts?.length === 0 ? <> 
               
               <span className='mt-10 text-xl'>Ahh não! Nenhuma publicação encontrada {`:(`}</span>
-              <Image src={'/amico2.png'} width={300} height={300} alt="not-found" />
+              <Image src={'/pana.png'} width={300} height={300} alt="not-found" />
               </> : ''}
 
           </>}
