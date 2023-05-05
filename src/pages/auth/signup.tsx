@@ -30,8 +30,7 @@ export default function SignUp() {
                             Já possui uma conta? Faça login
                         </Link>
                     </div>
-                </Auth>
-            
+                </Auth>  
         </>
     )
 }
