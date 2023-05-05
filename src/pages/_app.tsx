@@ -1,3 +1,4 @@
+import { UserContextProvider } from '@/contexts/UserContext';
 import '@/styles/globals.css'
 import type { AppProps } from 'next/app'
 import {Poppins} from 'next/font/google'
@@ -7,11 +8,14 @@ import 'react-toastify/dist/ReactToastify.css';
 const poppins = Poppins({weight: ["400", "500", "700"], subsets:['latin']})
 
 export default function App({ Component, pageProps }: AppProps) {
-  return (
 
+
+  return (
      <main className={`${poppins.className} p-3`}>
       <ToastContainer />
-      <Component {...pageProps} />
+      <UserContextProvider>
+        <Component {...pageProps} />
+      </UserContextProvider>
     </main>
   
   )
